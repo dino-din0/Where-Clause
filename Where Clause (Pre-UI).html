@@ -5,56 +5,84 @@
   <title>Maximo Asset Search</title>
   <style>
     body {
-      background-color: #F2F2F2;
-      /* Background color. Light gray was chosen from the PNNL Website */
       font-family: 'Helvetica', Arial, sans-serif;
-      /* Change the font for the whole document */
+      margin: 20px;
+      overflow: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Header 1 Color (Maximo COMPLOC Search) */
+    .Top {
+      width: 100%;
+      height: 40px;
+      left: 0;
+      top: 0;
+      position: absolute;
+      background: #344149;
+    }
+
     h1 {
-      color: #d77900;
-      /*PNNL Orange*/
-    }
+      width: 100%;
+      left: 0;
+      position: absolute;
+      top: 15px;
 
-    /* Header 2 Color (Generated Where Clause) */
-    h2 {
-      color: #d77900;
-      /*PNNL Orange*/
-    }
-
-    /* Adjust the width of the input boxes */
-    input[type="text"] {
-      width: 75%;
-      /* Adjust the width as needed */
+      color: #F7F7F7;
+      position: absolute;
+      text-align: left;
+      font-weight: 400;
+      word-wrap: break-word;
+      background: #B25A00;
+      padding: 20px;
       box-sizing: border-box;
-      /* Include padding and border in the width */
+    }
+
+    h2 {
+      width: 100%;
+      left: 0;
+      color: #B25A00;
+      text-align: left;
+      font-weight: 400;
+      word-wrap: break-word;
+    }
+
+    input[type="text"] {
+      width: 25%;
+      box-sizing: border-box;
       margin-bottom: 10px;
-      /* Add some spacing between input boxes */
+    }
+
+    main {
+      top: 1-px;
+      /* add container around this for bigger screens*/
+      width: auto;
+      height: 12px;
+      position: relative;
+      /* Change to relative positioning */
+      flex-grow: 1;
+      overflow: visible;
+      color: black;
+      font-size: 150%;
+      font-family: Inter;
+      font-weight: 400;
+      word-wrap: break-word;
     }
 
     .input-group {
       margin-bottom: 10px;
-      /* Add margin to the whole input group */
     }
 
     .description {
       display: block;
-      /* Display the span as a block element */
       margin-top: 5px;
-      /* Add margin to the top to separate it from the input */
       font-size: 13px;
-      /* Font size */
       color: #4b79c0;
-      /* Blue from Maximo */
     }
 
-    /* Style for the horizontal rule */
     hr {
       border: 1px solid #ccc;
-      /* Gray border */
       margin: 20px 0;
-      /* Margin for spacing */
     }
 
     #whereClause {
@@ -62,14 +90,88 @@
       height: 150px;
       font-family: monospace;
     }
+
+    button2 {
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      background-color: #F7F7F7;
+      color: black;
+      border: none;
+      margin-right: 10px;
+      cursor: pointer;
+      font-size: 8px;
+    }
+
+    button2:hover {
+      background-color: #F6F6F6;
+      color: #B25A00;
+    }
+
+    .question-mark {
+      display: inline-block;
+      width: 35px;
+      height: 35px;
+      background-color: #ccc;
+      border-radius: 40px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 30px;
+      position: relative;
+    }
+
+    .smQM {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      background-color: #ccc;
+      border-radius: 20px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 15px;
+      position: relative;
+    }
+
+    .info-text {
+      display: none;
+      position: relative;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 40%;
+      text-align: center;
+      left: 20%;
+      transform: translateX(-50%);
+      top: 5px;
+    }
+
+    .glow {
+      background-color: orange;
+    }
+
+    footer {
+      width: 100%;
+      height: 2.5%;
+      left: 0;
+      bottom: 0;
+      background: #B25A00;
+      position: fixed;
+    }
+
+    cheating {
+      width: 100%;
+      height: 60px;
+      left: 0;
+      bottom: 0;
+      color: #f9f9f9;
+      text-align: center;
+    }
   </style>
-
-  <!-- Notification Block Styling -->
   <div id="notification"
-    style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: lightgray; padding: 20px; border: 1px solid #000; font-size: 36px;">
+    style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #64d717; padding: 20px; border: 2px solid black; font-size: 36px;color: #F7F7F7; z-index: 9999;border-radius: 15px;">
   </div>
-
-  
   <script>
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -84,153 +186,281 @@
         copyToClipboard();
       }
     });
+    window.addEventListener('load', function () {
+      // Function to generate a random color from a list of colorHexList
+      function getRandomColor() {
+        const colorHexList = {
+          blue: '#0000FF',
+          purple: '#800080',
+          green: '#008000',
+          crimsonRed: '#DC143C',
+          red: '#FF0000',
+          orange: '#FFA500',
+          orangeRed: '#FF4500',
+          hotPink: '#FF69B4',
+          navyBlue: '#000080'
+        };
+        const colorNames = Object.keys(colorHexList);
+        const randomColorName = colorNames[Math.floor(Math.random() * colorNames.length)];
+        return colorHexList[randomColorName];
+      }
+      let descriptionSpan = document.querySelector('.description');
+      let textContent = descriptionSpan.textContent;
+      descriptionSpan.innerHTML = textContent
+        .split('')
+        .map(letter => `<span style="color: ${getRandomColor()}">${letter}</span>`)
+        .join('');
+    });
+
+    // Example 1 Fillout
+    function fillOutExample1() {
+      clearAllFields();
+      document.getElementById('buildings').value = '331, 3410';
+      document.getElementById('SearchDesc').value = 'CHW & PMP, HHW';
+      document.getElementById('ExTerms').value = 'Aquatics, Animal';
+      document.getElementById('LegAS').value = 'CHW-PMP, N-DIS';
+      document.getElementById('ExFAs').value = 'HHW-PMP, E-DIS';
+      // Status of checkboxes
+      document.getElementById('status_operating').checked = true;
+      document.getElementById('status_active').checked = true;
+      document.getElementById('status_decommissioned').checked = true;
+
+      generateWhereClause();
+    }
+    // Example 2 Fillout
+    function fillOutExample2() {
+      clearAllFields();
+      document.getElementById('buildings').value = '331, 3410';
+      document.getElementById('SearchDesc').value = 'CHW & PMP, HHW';
+      document.getElementById('ExTerms').value = 'Aquatics, Animal';
+      document.getElementById('LegAS').value = 'CHW-PMP, N-DIS';
+      document.getElementById('ExFAs').value = 'HHW-PMP, E-DIS';
+      // Status of checkboxes
+      document.getElementById('status_operating').checked = true;
+      document.getElementById('status_active').checked = true;
+      document.getElementById('status_decommissioned').checked = true;
+
+      generateWhereClause();
+    }
+    // Example 3 Fillout
+    function fillOutExample3() {
+      clearAllFields();
+      document.getElementById('buildings').value = '331, 3410';
+      document.getElementById('SearchDesc').value = 'CHW & PMP, HHW';
+      document.getElementById('ExTerms').value = 'Aquatics, Animal';
+
+      // Status of checkboxes
+      document.getElementById('status_operating').checked = true;
+      document.getElementById('status_active').checked = true;
+      document.getElementById('status_decommissioned').checked = true;
+      generateWhereClause();
+    }
+
+    // Clear all Feilds and checkboxes
+    function clearAllFields() {
+      document.getElementById('buildings').value = '';
+      document.getElementById('SearchDesc').value = '';
+      document.getElementById('ExTerms').value = '';
+      document.getElementById('LegAS').value = '';
+      document.getElementById('ExFAs').value = '';
+
+      // Uncheck all status checkboxes
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      document.getElementById('whereClause').value = '';
+    }
   </script>
 </head>
 
 <body>
-
-
-  <h1>Maximo COMPLOC Search (Where Clause)</h1>
-
-  <!-- Search for builidngs input -->
-  <form id="searchForm">
-    <div class="input-group">
-      <label for="buildings"><strong>[REQUIRED] Building(s):</strong></label><br>
-      <span class="description">Separate multiple building numbers with commas. <strong>NOTE</strong> that the generated
-        Where Clause will not work properly in Maximo. Modify the Where Clause output (remove the first "and" in the output), or the
-        code, if you are searching without a building </span>
-      <input type="text" id="buildings" placeholder="Enter building number(s) (e.g. 331, 3410)">
-    </div>
-
-    <!-- Terms to include in the Description input -->
-    <div class="input-group">
-      <label for="searchInDescription"><strong>Description Search:</strong></label>
-      <span class="description">Searches the 'Description' field in Maximo. Use commas to separate different description
-        terms (acts as an 'or' operator). Use '&' to search for descriptions containing multiple terms (acts as an 'and'
-        operator)</span>
-
-      <span class="description"> Example: If you do "331" as the 'Building' and "CHW & PMP, HHW" as the 'Description
-        Search' the following logic will apply: 331 with CHW & PMP (in the description) and 331 with HHW (in the
-        description) </span>
-      <input type="text" id="searchInDescription"
-        placeholder="Enter text for searching description (e.g. CHW & PMP, HHW)">
-    </div>
-
-    <!-- Exclude Terms in Description input -->
-    <div class="input-group">
-      <label for="excludeTerms">Exclude Terms in the Description:</label><br>
-      <span class="description">Separate multiple terms to exclude from the 'Description' Field with commas. Commas in
-        this case will act as an 'and' operator </span>
-
-      <span class="description"> Example: If you input "Aquatics, Animal", your search will <strong>not</strong> include
-        "Aquatics" <u>AND</u> "Animals" in the description </span>
-      <bk></bk>
-      <input type="text" id="excludeTerms"
-        placeholder="Enter terms to exclude in the description (e.g. Aquatics, Animal)">
-    </div>
-
-    <!-- Horizontal rule to visually separate the parts -->
-    <hr>
-
-    <!-- Legacy Asset Number Search input -->
-    <div class="input-group">
-      <label for="legacyAssetSearch"><strong>Legacy Asset Number Search:</strong></label><br>
-      <span class="description">Separate multiple Asset Numbers with commas. Commas will act as an 'or' operator</span>
-
-      <span class="description"> Example: If you input "CHW-PMP, N-DIS", your search will include Asset Numbers with
-        "CHW-PMP" <u>OR</u> "N-DIS" </span>
-      <input type="text" id="legacyAssetSearch" placeholder="Enter asset numbers to search for (e.g. CHW-PMP, N-DIS)">
-    </div>
-
-    <!-- Exclude from Legacy Asset input -->
-    <div class="input-group">
-      <label for="excludeFromLegacy">Exclude from Legacy Asset:</label><br>
-      <span class="description">Separate multiple terms to exclude from the 'Asset Number' Field with commas. Commas in
-	will act as an 'and' operator</span>
-
-      <span class="description">Example: If you input "HHW-PMP, E-DIS", your search will <strong>not</strong> include
-        Asset Numbers with "HHW-PMP" <u>AND</u> "E-DIS" </span>
-      <bk></bk>
-      <input type="text" id="excludeFromLegacy" placeholder="Enter asset numbers to exclude (e.g. HHW-PMP, E-DIS)">
-    </div>
-
-    <!-- Horizontal rule to visually separate the parts -->
-    <hr>
-
-    <!-- Status field input -->
-    <div class="input-group">
-      <label for="statusCheckboxes"><strong>Status(es):</strong></label><br>
-      <span class="description">Leave this blank to search for all statuses. Otherwise, select the statuses you
-        need</span>
-      <label for="status_operating">
-        <input type="checkbox" id="status_operating" value="OPERATING"> OPERATING
-      </label>
-      <br>
-      <label for="status_active">
-        <input type="checkbox" id="status_active" value="ACTIVE"> ACTIVE
-      </label>
-      <br>
-      <label for="status_decommissioned">
-        <input type="checkbox" id="status_decommissioned" value="DECOMMISSIONED"> DECOMMISSIONED
-      </label>
-      <br>
-      <label for="status_retired">
-        <input type="checkbox" id="status_retired" value="RETIRED"> RETIRED
-      </label>
-      <br>
-      <label for="status_inactive">
-        <input type="checkbox" id="status_inactive" value="INACTIVE"> INACTIVE
-      </label>
-      <br>
-      <label for="status_not_ready">
-        <input type="checkbox" id="status_not_ready" value="NOT READY"> NOT READY
-      </label>
-      <br>
-      <label for="status_disposed">
-        <input type="checkbox" id="status_disposed" value="DISPOSED"> DISPOSED
-      </label>
-      <br>
-      <label for="status_prepare_for_use">
-        <input type="checkbox" id="status_prepare_for_use" value="PREPARE FOR USE"> PREPARE FOR USE
-      </label>
-      <br>
-      <label for="status_storage">
-        <input type="checkbox" id="status_storage" value="STORAGE"> STORAGE
-      </label>
-      <br>
-      <label for="status_unoccupied">
-        <input type="checkbox" id="status_unoccupied" value="UNOCCUPIED"> UNOCCUPIED
-      </label>
-      <br>
-      <label for="status_draft">
-        <!-- This should not yield any results, though it has been added in the event that there was a "draft" COMPLOC that is created -->
-        <input type="checkbox" id="status_draft" value="DRAFT"> DRAFT
-      </label>
-      <br>
-
-      </select>
-
-      <!-- Horizontal rule to visually separate the parts -->
+  <!-- header -->
+  <div class="Top">
+    <h1>Where Clause Generator
+      <button2 type="button" onclick="fillOutExample1()">Ex.1</button2>
+      <button2 type="button" onclick="fillOutExample2()">Ex.2</button2>
+      <button2 type="button" onclick="fillOutExample3()">Ex.3</button2>
+      <button2 type="button" onclick="clearAllFields()">Clr</button2>
+    </h1>
+  </div>
+  <br><br><br><br><br><br><br>
+  <!-- Main Content -->
+  <div class="main">
+    <form id="searchForm">
+      <!-- Buildings -->
+      <div class="input-group">
+        <label for="buildings"><strong>Building(s):</strong></label>
+        <input type="text" id="buildings" placeholder="Enter building number(s) (e.g. 331, 3410)">
+        <span class="question-mark" id="questionMark1">?</span>
+        <div class="info-text" id="infoText1">Separate multiple building numbers with commas. <strong>NOTE</strong> that
+          the generated
+          Where Clause will not work properly in Maximo. Modify the Where Clause output (remove the first "and" in the
+          output), or the
+          code, if you are searching without a building</div>
+      </div>
+      <!-- SerchDesc -->
+      <div class="input-group">
+        <label for="SearchDesc"><strong>Description Search:</strong></label>
+        <input type="text" id="SearchDesc" placeholder="Enter text for searching description (e.g. CHW & PMP, HHW)">
+        <span class="question-mark" id="questionMark2">?</span>
+        <div class="info-text" id="infoText2">Searches the 'Description' field in Maximo. Use commas to separate
+          different description terms (acts as an 'or' operator). Use '&' to search for descriptions containing multiple
+          terms (acts as an 'and' operator)
+          Example: If you do "331" as the 'Building' and "CHW & PMP, HHW" as the 'Description Search' the following
+          logic will apply: 331 with CHW & PMP (in the description) and 331 with HHW (in the description)</div>
+      </div>
+      <!-- Exclude terms in description -->
+      <div class="input-group">
+        <label for="ExTerms"><strong>Terms in the Description:</strong> </label>
+        <input type="text" id="ExTerms" placeholder="Enter terms to exclude in the description (e.g. Aquatics, Animal)">
+        <span class="question-mark" id="questionMark3">?</span>
+        <div class="info-text" id="infoText3">Separate multiple terms to exclude from the 'Description' Field with
+          commas. Commas in this case will act as an 'and' operator
+          Example: If you input "Aquatics, Animal", your search will <strong>not</strong> include "Aquatics"
+          <u>AND</u> "Animals" in the description
+        </div>
+      </div>
       <hr>
+      <!-- Legasy Asset Number -->
+      <div class="input-group">
+        <label for="LegAS"><strong>Legacy Asset Number Search:</strong></label>
+        <input type="text" id="LegAS" placeholder="Enter asset numbers to search for (e.g. CHW-PMP, N-DIS)">
+        <span class="question-mark" id="questionMark4">?</span>
+        <div class="info-text" id="infoText4">
+          Separate multiple Asset Numbers with commas. Commas will act as an 'or' operatorExample: If youF input
+          "CHW-PMP, N-DIS", your search will include Asset Numbers with "CHW-PMP" <u>OR</u> "N-DIS" </div>
+      </div>
+      <!-- Exclude from Legacy Asset -->
+      <div class="input-group">
+        <label for="ExFAs"><strong>Exclude from Legacy Asset:</strong> </label>
+        <input type="text" id="ExFAs" placeholder="Enter asset numbers to exclude (e.g. HHW-PMP, E-DIS)">
+        <span class="question-mark" id="questionMark5">?</span>
+        <div class="info-text" id="infoText5">
+          Separate multiple terms to exclude from the 'Asset Number' Field with commas. Commas
+          in
+          this case will act as an 'and' operator
+          Example: If you input "HHW-PMP, E-DIS", your search will <strong>not</strong>
+          include
+          Asset Numbers with "HHW-PMP" <u>AND</u> "E-DIS" </div>
+      </div>
+      <hr>
+      <!-- CheackBoxes -->
+      <div class="input-group">
+        <label for="statusCheckboxes"><strong>Status(es):</strong></label><br>
+        <span class="description">Leave this blank to search for all statuses. Otherwise, select the statuses you
+          need</span>
+        <label for="status_operating">
+          <input type="checkbox" id="status_operating" value="OPERATING"> OPERATING
+        </label>
+        <br>
+        <label for="status_active">
+          <input type="checkbox" id="status_active" value="ACTIVE"> ACTIVE
+        </label>
+        <br>
+        <label for="status_decommissioned">
+          <input type="checkbox" id="status_decommissioned" value="DECOMMISSIONED"> DECOMMISSIONED
+        </label>
+        <br>
+        <label for="status_retired">
+          <input type="checkbox" id="status_retired" value="RETIRED"> RETIRED
+        </label>
+        <br>
+        <label for="status_inactive">
+          <input type="checkbox" id="status_inactive" value="INACTIVE"> INACTIVE
+        </label>
+        <br>
+        <label for="status_not_ready">
+          <input type="checkbox" id="status_not_ready" value="NOT READY"> NOT READY
+        </label>
+        <br>
+        <label for="status_disposed">
+          <input type="checkbox" id="status_disposed" value="DISPOSED"> DISPOSED
+        </label>
+        <br>
+        <label for="status_prepare_for_use">
+          <input type="checkbox" id="status_prepare_for_use" value="PREPARE FOR USE"> PREPARE FOR USE
+        </label>
+        <br>
+        <label for="status_storage">
+          <input type="checkbox" id="status_storage" value="STORAGE"> STORAGE
+        </label>
+        <br>
+        <label for="status_unoccupied">
+          <input type="checkbox" id="status_unoccupied" value="UNOCCUPIED"> UNOCCUPIED
+        </label>
+        <br>
+        <label for="status_draft">
+          <input type="checkbox" id="status_draft" value="DRAFT"> DRAFT
+        </label>
 
-      <!-- Generate Where Clause Button-->
+      </div>
+
+      <hr>
+      <!-- Generate where clause -->
       <button type="button" onclick="generateWhereClause()">Generate Where Clause</button>
-      <span class="description"> Click "Generate Where Clause" to create the Where Clause based on the input above. You
-        can also press <strong>Enter</strong> on your Keyboard </span>
+      <span class="smQM" id="questionMark6">?</span>
+      <div class="info-text" id="infoText6"> You
+        can also press <strong>Enter</strong> on your Keyboard </div>
+      <h2>Generated Where Clause:</h2>
+      <textarea id="whereClause" readonly></textarea>
 
-  </form>
+      <button onclick="copyToClipboard()">Copy to Clipboard</button><br>
+      <span class="smQM" id="questionMark7">?</span>
+      <div class="info-text" id="infoText7"> Click "Copy to Clipboard" to copy the Generated Where Clause above. You
+        can also
+        press
+        <strong>Shift + Enter</strong> on your Keyboard
+      </div>
 
-  <!-- Horizontal rule to visually separate the parts -->
-  <hr>
-
-  <h2>Generated Where Clause:</h2>
-  <textarea id="whereClause" readonly></textarea>
-
-  <button onclick="copyToClipboard()">Copy to Clipboard</button><br>
-  <span class="description"> Click "Copy to Clipboard" to copy the Generated Where Clause above. You can also press
-    <strong>Shift + Enter</strong> on your Keyboard </span>
-  <!-- Where Clause from the Inputs -->
+    </form>
+    <br>
+    <footer></footer>
+  </div>
   <script>
+    window.addEventListener('load', function () {
+      let questionMarks = document.querySelectorAll('.question-mark, .smQM'); // Include both regular and small question marks
+      let infoTexts = document.querySelectorAll('.info-text');
+      let activeIndex = null;
+
+      questionMarks.forEach(function (questionMark, index) {
+        questionMark.addEventListener('click', function () {
+          if (activeIndex !== null) {
+            infoTexts[activeIndex].style.display = 'none';
+            questionMarks[activeIndex].classList.remove('glow');
+          }
+
+          if (activeIndex !== index) {
+            infoTexts[index].style.display = 'block';
+            questionMarks[index].classList.add('glow');
+            activeIndex = index;
+          } else {
+            activeIndex = null;
+          }
+        });
+      });
+    });
+    window.addEventListener('load', function () {
+      let questionMarks = document.querySelectorAll('.question-mark' || ".smQM");
+      let infoTexts = document.querySelectorAll('.info-text');
+      let activeIndex = null;
+
+      questionMarks.forEach(function (questionMark, index) {
+        questionMark.addEventListener('click', function () {
+          if (activeIndex !== null) {
+            infoTexts[activeIndex].style.display = 'none';
+            questionMarks[activeIndex].classList.remove('glow');
+          }
+
+          if (activeIndex !== index) {
+            infoTexts[index].style.display = 'block';
+            questionMarks[index].classList.add('glow');
+            activeIndex = index;
+          } else {
+            activeIndex = null;
+          }
+        });
+      });
+    });
     function generateWhereClause() {
       // Retrive valuves from the inputs
       function sanitizeInput(input) {
@@ -245,10 +475,10 @@
       }
 
       const buildings = sanitizeInput(document.getElementById('buildings').value);
-      const searchInDescription = sanitizeInput(document.getElementById('searchInDescription').value);
-      const excludeTerms = sanitizeInput(document.getElementById('excludeTerms').value);
-      const legacyAssetSearch = sanitizeInput(document.getElementById('legacyAssetSearch').value);
-      const excludeFromLegacy = sanitizeInput(document.getElementById('excludeFromLegacy').value);
+      const SearchDesc = sanitizeInput(document.getElementById('SearchDesc').value);
+      const ExTerms = sanitizeInput(document.getElementById('ExTerms').value);
+      const LegAS = sanitizeInput(document.getElementById('LegAS').value);
+      const ExFAs = sanitizeInput(document.getElementById('ExFAs').value);
 
 
       const selectedStatuses = [];
@@ -264,27 +494,27 @@
       // Start of creating the Where Clause
       let whereClause = '(\n  (\n';
 
-      // Building search condition based on the number of searchInDescription terms
+      // Building search condition based on the number of SearchDesc terms
       if (buildings) {
         const buildingNumbers = buildings.split(',').map(item => item.trim());
-        if (searchInDescription) {
+        if (SearchDesc) {
           let descriptionSearch = '';
           buildingNumbers.forEach(num => {
-            descriptionSearch += searchInDescription.split(',').map(term => `${num} ~${term}`).join(' | ') + ' | ';
+            descriptionSearch += SearchDesc.split(',').map(term => `${num} ~${term}`).join(' | ') + ' | ';
           });
           descriptionSearch = descriptionSearch.slice(0, -3); // Remove the trailing ' | '
           whereClause += `    contains(description, '${descriptionSearch}')\n`;
         } else {
-          // If there are no searchInDescription terms, use buildings only
+          // If there are no SearchDesc terms, use buildings only
           let descriptionSearch = buildingNumbers.map(num => `${num}`).join(' | ');
           whereClause += `    contains(description, '${descriptionSearch}')\n`;
         }
       }
 
       // Legacy Asset Number Search condition
-      if (legacyAssetSearch) {
+      if (LegAS) {
         // Split the legacy asset search terms and trim each term
-        const legacyAssetTerms = legacyAssetSearch.split(',').map(term => term.trim());
+        const legacyAssetTerms = LegAS.split(',').map(term => term.trim());
 
         if (legacyAssetTerms.length === 1) {
           // If only one term, use 'and'
@@ -314,49 +544,42 @@
       whereClause += '  and (\n';
 
       // 'Type in' condition 
-      whereClause += `    type in ('COURIER', 'HOLDING', 'LABOR', 'ALTWORK', 'AREA', 'BLDG', 'CAD', 'CAMPUS', 'COMPLOC', 'CONFERENCE ROOM', 'CUBICLE', 'FACILITIES', 'GEO', 'LACTATION ROOM', 'OPERATING', 'PHONE BOOTH', 'PNNL', 'PRIVATE OFFICE', 'SHARED OFFICE', 'SPACE', 'SYSBLDG' , 'SYSFUNC' , 'SYSGRP' , 'SYSSPEC' , 'SYSTEM', 'TRAINING ROOM', 'WHISPER ROOM', 'WORKSTATION', 'REPAIR', 'SALVAGE', 'VENDOR')\n`;
-
-
+      whereClause += `    type in ('COURIER', 'HOLDING', 'LABOR', 'ALTWORK', 'AREA', 'BLDG', 'CAD', 'CAMPUS', 'COMPLOC', 'CONFERENCE ROOM', 'CUBICLE', 'FACILITIES', 'GEO', 'LACTATION ROOM', 'OPERATING', 'PHONE BOOTH', 'PNNL', 'PRIVATE OFFICE', 'SHARED OFFICE', 'SPACE', 'TRAINING ROOM', 'WHISPER ROOM', 'WORKSTATION', 'REPAIR', 'SALVAGE', 'VENDOR')\n`;
       // Exclude Terms in Description condition
-      if (excludeTerms) {
+      if (ExTerms) {
         whereClause += '  )\n  and (\n';
-        const excludedTerms = excludeTerms.split(',').map(item => item.trim());
+        const excludedTerms = ExTerms.split(',').map(item => item.trim());
         whereClause += excludedTerms.map(term => `    description not like '%${term}%'`).join('\n    and ');
         whereClause += '\n  )\n';
       } else {
         whereClause += '  )\n';
       }
-
       // Exclude Terms from Legacy Asset condition
-      if (excludeFromLegacy) {
+      if (ExFAs) {
         whereClause += '  )\n  and (\n';
-        const excludedFromLegacy = excludeFromLegacy.split(',').map(item => item.trim());
+        const excludedFromLegacy = ExFAs.split(',').map(item => item.trim());
         whereClause += excludedFromLegacy.map(term => `    legacyassetnum not like '%${term}%'`).join('\n    and ');
         whereClause += '\n  )\n';
       } else {
         whereClause += ')\n';
       }
-
       // Set the generated where clause to the text area
       document.getElementById('whereClause').value = whereClause;
 
       const notification = document.getElementById('notification');
       notification.textContent = 'Where Clause Generated!';
       notification.style.display = 'block';
-
       // Automatically hide the notification after a few seconds
       setTimeout(function () {
         notification.style.display = 'none';
       }, 1000); // 1000 milliseconds (1 seconds)
     }
-
+    //Copy to clipboard function
     function copyToClipboard() {
-      event.preventDefault(); // Prevent default form submission behavior
-
+      event.preventDefault();
       const textarea = document.getElementById('whereClause');
       textarea.select();
       document.execCommand('copy');
-
       const notification = document.getElementById('notification');
       notification.textContent = 'Where Clause copied to Clipboard!';
       notification.style.display = 'block';
@@ -366,7 +589,6 @@
         notification.style.display = 'none';
       }, 3000); // 3000 milliseconds (3 seconds)
     }
-
   </script>
 
 </body>
