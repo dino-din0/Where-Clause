@@ -386,6 +386,10 @@
           <input type="checkbox" id="status_disposed" value="DISPOSED"> DISPOSED
         </label>
         <br>
+        <label for="status_maintenance">
+          <input type="checkbox" id="status_maintenance" value="MAINTENANCE"> MAINTENANCE
+        </label>
+        <br>
         <label for="status_prepare_for_use">
           <input type="checkbox" id="status_prepare_for_use" value="PREPARE FOR USE"> PREPARE FOR USE
         </label>
@@ -400,6 +404,54 @@
         <br>
         <label for="status_draft">
           <input type="checkbox" id="status_draft" value="DRAFT"> DRAFT
+        </label>
+        <br>
+        <label for="status_excess">
+          <input type="checkbox" id="status_excess" value="EXCESS"> EXCESS 
+        </label>
+        <br>
+        <label for="status_ehffp">
+          <input type="checkbox" id="status_ehffp" value="EHFFP"> EHFFP (Equiment Held for Future Projects) 
+        </label>
+        <br>
+        <label for="status_missing">
+          <input type="checkbox" id="status_missing" value="MISSING"> MISSING
+        </label>
+        <br>
+        <label for="status_broken">
+          <input type="checkbox" id="status_broken" value="BROKEN"> BROKEN
+        </label>
+        <br>
+        <label for="status_pending_disposal">
+          <input type="checkbox" id="status_pending_disposal" value="PENDINGDISPOSAL"> PENDING DISPOSAL
+        </label>
+        <br>
+        <label for="status_sealed">
+          <input type="checkbox" id="status_sealed" value="SEALED"> SEALED
+        </label>
+        <br>
+        <label for="status_imported">
+          <input type="checkbox" id="status_imported" value="IMPORTED"> IMPORTED
+        </label>
+        <br>
+        <label for="status_limited_use">
+          <input type="checkbox" id="status_limited_use" value="LIMITEDUSE"> LIMITED USE
+        </label>
+        <br>
+        <label for="status_non_reg">
+          <input type="checkbox" id="status_non_reg" value="NON-REG"> NON-REGULATED
+        </label>
+        <br>
+        <label for="status_inventory">
+          <input type="checkbox" id="status_inventory" value="inventory"> INVENTORY
+        </label>
+        <br>
+        <label for="status_maintain">
+          <input type="checkbox" id="status_maintain" value="MAINTAIN"> MAINTAIN
+        </label>
+        <br>
+        <label for="status_procured">
+          <input type="checkbox" id="status_procured" value="PROCURED"> PROCURED
         </label>
       </div>
 
@@ -595,8 +647,9 @@
           // If more than one term, use 'and' for the first term, and 'or' for the rest
           whereClause += `and ((legacyassetnum like '%${legacyAssetTerms[0]}%')\n`;
           for (let i = 1; i < legacyAssetTerms.length; i++) {
-            whereClause += `    or (legacyassetnum like '%${legacyAssetTerms[i]}%'))\n`;
+            whereClause += `    or (legacyassetnum like '%${legacyAssetTerms[i]}%')\n`;
           }
+          whereClause += ')'
         }
         whereClause += '\n';
       }
